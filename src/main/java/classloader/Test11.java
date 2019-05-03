@@ -2,6 +2,9 @@ package classloader;
 
 /*
    类继承的初始化
+
+   在类的继承关系中，通过子类访问父类的静态成员并不属于对子类的主动使用
+   而是对父类的主动使用
  */
 public class Test11 {
     public static void main(String[] args) {
