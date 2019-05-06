@@ -11,19 +11,39 @@ import java.io.InputStream;
 
 public class Test16 {
     public static void main(String[] args) throws Exception {
-        ClassLoader16 cl = new ClassLoader16("classLoader");
-        test(cl);
-    }
+        ClassLoader16 loader1 = new ClassLoader16("loader1");
+        //cl.setPath("/Users/talent/Desktop/intelliJ/JVM/build/classes/java/main/classloader/");
 
-    public static void test(ClassLoader classLoader) throws Exception {
-        Class<?> clazz = classLoader.loadClass("classloader.Test1");
-        Object obj = clazz.newInstance();
-        System.out.println(obj);
+        // 设置一个不在工程目录下的path
+        loader1.setPath("/Users/talent/Desktop/");
+
+        // 如果需要使用自定义的类加载器需要将工程下的Test1删除
+        // 系统类加载器AppClassLoader首先会在工程目录下查找Test1
+        // 一旦找到就会直接加载，因此指定的Test1是不会被加载的
+        Class<?> class1 = loader1.loadClass("classloader.Test1");
+
+        System.out.println("---------");
+        Object obj = class1.newInstance();
+        System.out.println(obj.getClass().getClassLoader());
+
+        System.out.println("=====================");
+
+        ClassLoader16 loader2 = new ClassLoader16("loader2");
+        loader2.setPath("/Users/talent/Desktop/");
+
+        Class<?> class2 = loader2.loadClass("classloader.Test1");
+        System.out.println("---------");
+        Object obj2 = class2.newInstance();
+        System.out.println(obj2.getClass().getClassLoader());
+
     }
 }
 
 class ClassLoader16 extends ClassLoader{
+
     private String classLoaderName;
+
+    private String path;
 
     private final String extension = ".class";
 
@@ -37,26 +57,33 @@ class ClassLoader16 extends ClassLoader{
         this.classLoaderName = classLoaderName;
     }
 
+    public String getPath() {
+        return path;
+    }
 
-    @Override
-    protected Class<?> findClass(String name) throws ClassNotFoundException {
-        byte[] data = this.loadClassData(name);
-        return this.defineClass(name, data, 0, data.length);
+    public void setPath(String path) {
+        this.path = path;
     }
 
     @Override
-    public String toString(){
-        return "--" + this. classLoaderName + "--";
+    protected Class<?> findClass(String name) throws ClassNotFoundException {
+
+        System.out.println("findClass invoked: " + name);
+        System.out.println("class loader name: " + this.classLoaderName);
+
+        byte[] data = this.loadClassData(name);
+        return this.defineClass(name, data, 0, data.length);
     }
 
     private byte[] loadClassData(String name){
         InputStream is = null;
         byte[] data = null;
         ByteArrayOutputStream baos = null;
+        name = name.replace(".", "/");
 
         try {
             this.classLoaderName = this.classLoaderName.replace(".", "/");
-            is = new FileInputStream(new File(name + this.extension));
+            is = new FileInputStream(new File(this.path + name + this.extension));
             baos = new ByteArrayOutputStream();
 
             int ch = 0;
