@@ -28,13 +28,28 @@ public class Test16 {
 
         System.out.println("=====================");
 
-        ClassLoader16 loader2 = new ClassLoader16("loader2");
+        //ClassLoader16 loader2 = new ClassLoader16("loader2");
+
+        // 这种情况下，loader1 作为 loader2 的父加载器去加载Test1 class
+        // 但是之前Test1 已经被loader1 加载过，因此 loader2 加载时会直接返回
+        // findClass方法不会被调用.
+        ClassLoader16 loader2 = new ClassLoader16(loader1,"loader2");
         loader2.setPath("/Users/talent/Desktop/");
 
         Class<?> class2 = loader2.loadClass("classloader.Test1");
         System.out.println("---------");
         Object obj2 = class2.newInstance();
         System.out.println(obj2.getClass().getClassLoader());
+
+        System.out.println("=====================");
+
+        ClassLoader16 loader3 = new ClassLoader16(loader2,"loader3");
+        loader3.setPath("/Users/talent/Desktop/");
+
+        Class<?> class3 = loader3.loadClass("classloader.Test1");
+        System.out.println("---------");
+        Object obj3 = class3.newInstance();
+        System.out.println(obj3.getClass().getClassLoader());
 
     }
 }
