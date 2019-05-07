@@ -11,6 +11,45 @@ import java.io.InputStream;
 
 public class Test16 {
     public static void main(String[] args) throws Exception {
+
+        Test16 test16 = new Test16();
+        //test16.testLoader();
+        test16.testUnload();
+
+    }
+
+    // 类的卸载的示例方法
+    private void testUnload() throws Exception {
+
+        ClassLoader16 loader1 = new ClassLoader16("loader1");
+        // 设置一个不在工程目录下的path
+        loader1.setPath("/Users/talent/Desktop/");
+        Class<?> class1 = loader1.loadClass("classloader.Test1");
+
+        Object obj = class1.newInstance();
+        System.out.println(obj.getClass().getClassLoader());
+
+        System.out.println("=====================");
+
+        loader1 = null;
+        class1 = null;
+        obj = null;
+
+        // -XX:+TraceClassUnloading 使用这个参数可以打印类卸载信息.
+        System.gc();
+
+        // 指向新的对象
+        loader1 = new ClassLoader16("loader1");
+        // 设置一个不在工程目录下的path
+        loader1.setPath("/Users/talent/Desktop/");
+        class1 = loader1.loadClass("classloader.Test1");
+
+        obj = class1.newInstance();
+        System.out.println(obj.getClass().getClassLoader());
+    }
+
+    // 类加载的示例方法
+    private void testLoader() throws Exception {
         ClassLoader16 loader1 = new ClassLoader16("loader1");
         //cl.setPath("/Users/talent/Desktop/intelliJ/JVM/build/classes/java/main/classloader/");
 
@@ -22,7 +61,6 @@ public class Test16 {
         // 一旦找到就会直接加载，因此指定的Test1是不会被加载的
         Class<?> class1 = loader1.loadClass("classloader.Test1");
 
-        System.out.println("---------");
         Object obj = class1.newInstance();
         System.out.println(obj.getClass().getClassLoader());
 
@@ -37,7 +75,6 @@ public class Test16 {
         loader2.setPath("/Users/talent/Desktop/");
 
         Class<?> class2 = loader2.loadClass("classloader.Test1");
-        System.out.println("---------");
         Object obj2 = class2.newInstance();
         System.out.println(obj2.getClass().getClassLoader());
 
@@ -47,10 +84,8 @@ public class Test16 {
         loader3.setPath("/Users/talent/Desktop/");
 
         Class<?> class3 = loader3.loadClass("classloader.Test1");
-        System.out.println("---------");
         Object obj3 = class3.newInstance();
         System.out.println(obj3.getClass().getClassLoader());
-
     }
 }
 
