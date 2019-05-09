@@ -1,7 +1,7 @@
 package classloader;
 
 /*
-    类加载信息
+    启动类加载信息
  */
 public class Test18 {
     public static void main(String[] args) {
