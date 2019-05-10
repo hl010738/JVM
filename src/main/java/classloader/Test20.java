@@ -24,10 +24,3 @@ public class Test20 {
         method.invoke(obj1, obj2);
     }
 }
-
-class Person{
-    private Person person;
-    public void setPerson(Object object){
-        this.person = (Person) object;
-    }
-}
