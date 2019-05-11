@@ -15,6 +15,10 @@ public class MyClassLoader extends ClassLoader {
 
     private final String extension = ".class";
 
+    public MyClassLoader(ClassLoader parent){
+        super(parent);
+    }
+
     public MyClassLoader(String classLoaderName){
         super(); // 默认将系统类加载器作为父加载器
         this.classLoaderName = classLoaderName;
