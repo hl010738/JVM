@@ -2,6 +2,8 @@ package memory;
 
 /*
     jvisualvm 工具 和 jsonsole 工具 查看死锁
+
+    2个线程锁定 形成死锁
  */
 public class Test3 {
     public static void main(String[] args) {
